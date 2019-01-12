@@ -12,5 +12,5 @@
 #' @name iptrie
 #' @docType package
 #' @author Bob Rudis (bob@@rud.is)
-#' @useDynLib iptrie
+#' @useDynLib iptrie, .registration=TRUE
 NULL

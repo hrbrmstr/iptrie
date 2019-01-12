@@ -12,7 +12,8 @@
 #' iptrie_ip_exists(x,"10.1.11.1/32")
 #' iptrie_lookup(x, "10.1.10.1/32")
 iptrie_create <- function() {
-  .Call("Rcreate", PACKAGE = "iptrie")
+  .Call(Rcreate)
+  # .Call("Rcreate", PACKAGE = "iptrie")
 }
 
 #' Insert a value for an IPv4 Address+CIDR combo into an IPv4 Trie
@@ -32,7 +33,8 @@ iptrie_create <- function() {
 #' iptrie_ip_exists(x,"10.1.11.1/32")
 #' iptrie_lookup(x, "10.1.10.1/32")
 iptrie_insert <- function(trie, ip, value) {
-  invisible(.Call("Rinsert", trie=trie, ip=ip, value=value, PACKAGE = "iptrie"))
+  invisible(.Call(Rinsert, trie=trie, ip=ip, value=value))
+  # invisible(.Call("Rinsert", trie=trie, ip=ip, value=value, PACKAGE = "iptrie"))
 }
 
 #' Lookup a value for an IPv4 Address+CIDR combo into an IPv4 Trie or Test for Existence
@@ -45,7 +47,8 @@ iptrie_insert <- function(trie, ip, value) {
 #' @return character vector or `NULL`
 #' @export
 iptrie_lookup <- function(trie, ip) {
-  .Call("Rlookup", trie=trie, ip=ip, PACKAGE = "iptrie")
+  .Call(Rlookup, trie=trie, ip=ip)
+  # .Call("Rlookup", trie=trie, ip=ip, PACKAGE = "iptrie")
 }
 
 #' @rdname iptrie_lookup
@@ -76,7 +79,8 @@ iptrie_ip_exists <- function(trie, ip) {
 #' iptrie_ip_exists(x,"10.1.11.1/32")
 #' iptrie_lookup(x, "10.1.10.1/32")
 iptrie_remove <- function(trie, ip) {
-  invisible(.Call("Rlookup", trie=trie, entry=ip, PACKAGE = "iptrie"))
+  invisible(.Call(Rlookup, trie=trie, entry=ip))
+  # invisible(.Call("Rlookup", trie=trie, entry=ip, PACKAGE = "iptrie"))
 }
 
 #' Destroy an IP trie
@@ -94,5 +98,6 @@ iptrie_remove <- function(trie, ip) {
 #' iptrie_ip_exists(x,"10.1.11.1/32")
 #' iptrie_lookup(x, "10.1.10.1/32")
 iptrie_destroy <- function(trie) {
-  invisible(.Call("Rdestroy", trie=trie, PACKAGE = "iptrie"))
+  invisible(.Call(Rdestroy, trie=trie))
+  # invisible(.Call("Rdestroy", trie=trie, PACKAGE = "iptrie"))
 }

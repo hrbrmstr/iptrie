@@ -1,6 +1,13 @@
-context("minimal package functionality")
+context("Core IP trie ops work")
 test_that("we can do something", {
 
-  #expect_that(some_function(), is_a("data.frame"))
+  x <- iptrie_create()
+  expect_true(!is.null(x))
+
+  expect_true(is.null(iptrie_insert(x, "10.1.10.0/24", "HOME")))
+
+  expect_true(iptrie_ip_exists(x,"10.1.10.1/32"))
+  expect_false(iptrie_ip_exists(x,"10.1.11.1/32"))
+  expect_equal(iptrie_lookup(x, "10.1.10.1/32"), "HOME")
 
 })
