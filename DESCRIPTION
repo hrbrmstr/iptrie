@@ -1,29 +1,31 @@
-Package: iptree
+Package: iptrie
 Type: Package
-Title: iptree title goes here otherwise CRAN checks fail
+Title: Efficiently Store and Query 'IPv4' Internet Addresses with Associated Data
 Version: 0.1.0
 Date: 2019-01-12
 Authors@R: c(
     person("Bob", "Rudis", email = "bob@rud.is", role = c("aut", "cre"), 
-           comment = c(ORCID = "0000-0001-5670-2640"))
+           comment = c(ORCID = "0000-0001-5670-2640")),
+    person("alichator", role = "aut",
+           comment = "iptree C library co-author; https://github.com/alichator"),
+    person("David", "Adrian", role = "aut",
+           comment = "iptree C library co-author; https://github.com/dadrian")
   )
 Maintainer: Bob Rudis <bob@rud.is>
-Description: A good description goes here otherwise CRAN checks fail.
-URL: https://gitlab.com/hrbrmstr/iptree
-BugReports: https://gitlab.com/hrbrmstr/iptree/issues
-SystemRequirements: C++11
+Description: Tries are great ways to store data that has obvious hierarchichal 
+    properties, such as 'IPv4' addresses. Methods are provided to create 'IPv4'
+    tries and store, retrieve and delete 'IPv4' address keys with values. 
+    Functions are based on the 'zmap' 'iptree' 'C' library.
+    <https://github.com/zmap/iptree>.
+URL: https://gitlab.com/hrbrmstr/iptrie
+BugReports: https://gitlab.com/hrbrmstr/iptrie/issues
+NeedsCompilation: true
 Encoding: UTF-8
-License: AGPL
+License: Apache License 2.0 | file LICENSE
 Suggests:
     testthat,
     covr
 Depends:
     R (>= 3.2.0)
-Imports:
-    httr,
-    jsonlite,
-    Rcpp
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
-LinkingTo: 
-    Rcpp

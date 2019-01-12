@@ -1,2 +1,2 @@
 library(testthat)
-test_check("iptree")
+test_check("iptrie")
