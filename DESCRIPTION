@@ -11,6 +11,7 @@ Maintainer: Bob Rudis <bob@rud.is>
 Description: A good description goes here otherwise CRAN checks fail.
 URL: https://gitlab.com/hrbrmstr/iptree
 BugReports: https://gitlab.com/hrbrmstr/iptree/issues
+SystemRequirements: C++11
 Encoding: UTF-8
 License: AGPL
 Suggests:
@@ -20,6 +21,9 @@ Depends:
     R (>= 3.2.0)
 Imports:
     httr,
-    jsonlite
+    jsonlite,
+    Rcpp
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
+LinkingTo: 
+    Rcpp
