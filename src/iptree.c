@@ -1,4 +1,4 @@
-#include <iptree.h>
+#include "iptree.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -211,6 +211,14 @@ char * iptree_lookup_best_str (iptree_node_t *root, const char * ip) {
     iptree_parse_cidr(ip, &ipAddr, &mask);
     iptree_node_t * ret = iptree_lookup_best(root, ipAddr);
     return ((ret == NULL) ? (char *)ret : ret->data);
+}
+
+iptree_node_t *iptree_lookup_best_str_2 (iptree_node_t *root, const char * ip) {
+  uint32_t ipAddr;
+  uint32_t mask;
+  iptree_parse_cidr(ip, &ipAddr, &mask);
+  iptree_node_t * ret = iptree_lookup_best(root, ipAddr);
+  return ((ret == NULL) ? NULL : ret);
 }
 
 void iptree_remove (iptree_node_t *root, uint32_t ip, uint32_t mask) {

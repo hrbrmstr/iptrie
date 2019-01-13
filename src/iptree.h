@@ -39,6 +39,7 @@ iptree_node_t *iptree_lookup_exact (iptree_node_t *root, uint32_t ip,
                                     uint32_t mask);
 iptree_node_t *iptree_lookup_best (iptree_node_t *root, uint32_t ip);
 char *iptree_lookup_best_str (iptree_node_t *root, const char * ip);
+iptree_node_t *iptree_lookup_best_str_2 (iptree_node_t *root, const char * ip);
 iptree_node_t *iptree_insert (iptree_node_t *root, uint32_t ip, uint32_t mask,
                               char *data);
 void iptree_insert_str (iptree_node_t *root, const char * cidr, char *data);

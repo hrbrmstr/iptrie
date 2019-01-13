@@ -44,6 +44,7 @@ The following functions are implemented:
 - `iptrie_create`:	Create a new IPv4 Trie
 - `iptrie_destroy`:	Destroy an IP trie
 - `iptrie_insert`:	Insert a value for an IPv4 Address+CIDR combo into an IPv4 Trie
+- `iptrie_ip_in`:	Lookup a value for an IPv4 Address+CIDR combo into an IPv4 Trie or Test for Existence
 - `iptrie_lookup`:	Lookup a value for an IPv4 Address+CIDR combo into an IPv4 Trie or Test for Existence
 - `iptrie_remove`:	Remove a trie entry for an IPv4 Address+CIDR combo into an IPv4 Trie
 
@@ -61,6 +62,7 @@ devtools::install_github("hrbrmstr/iptree")
 
 ```{r lib-ex}
 library(iptrie)
+library(tidyverse)
 
 # current version
 packageVersion("iptree")
@@ -74,11 +76,63 @@ x <- iptrie_create()
 
 iptrie_insert(x, "10.1.10.0/24", "HOME")
 
-iptrie_ip_exists(x,"10.1.10.1/32")
+iptrie_ip_in(x,"10.1.10.1/32")
 
-iptrie_ip_exists(x,"10.1.11.1/32")
+iptrie_ip_in(x,"10.1.11.1/32")
 
 iptrie_lookup(x, "10.1.10.1/32")
+
+iptrie_lookup(x, "10.1.10.1/32", "exact")
+```
+
+### Bigger example
+
+```{r bigger, cache=TRUE}
+# Make a trie from autonomous system CIDRs
+xdf <- astools::routeviews_latest()
+
+cat(scales::comma(nrow(xdf)), "\n")
+
+asntrie <- iptrie_create()
+
+system.time(for (i in 1:nrow(xdf)) {
+  iptrie_insert(asntrie, xdf[["cidr"]][i], xdf[["asn"]][i])
+})
+
+# Get a block list (picked at ransom)
+blklst <- url("https://iplists.firehol.org/files/botscout_1d.ipset")
+y <- readLines(blklst)
+close(blklst)
+
+y <- y[!grepl("^#", y)] # comments at the top
+
+cat(scales::comma(length(y)), "\n")
+
+system.time(do.call(
+  rbind.data.frame,
+  lapply(y, function(.x) {
+    r <- iptrie_lookup(asntrie, .x, "best")
+    if (is.null(r)) {
+      data.frame(
+        ip = .x, 
+        asn = NA_character_, 
+        cidr = NA_character_,
+        stringsAsFactors = FALSE
+      )
+    } else {
+      data.frame(
+        ip = .x, 
+        asn = r, 
+        cidr = sprintf("%s/%d", attr(r, "ip"), attr(r, "mask")),
+        stringsAsFactors = FALSE
+      )
+    }
+  })
+) -> cdf)
+
+as_tibble(cdf)
+
+count(cdf, cidr, sort=TRUE)
 ```
 
 ## iptree Metrics

@@ -3,7 +3,7 @@
 export(iptrie_create)
 export(iptrie_destroy)
 export(iptrie_insert)
-export(iptrie_ip_exists)
+export(iptrie_ip_in)
 export(iptrie_lookup)
 export(iptrie_remove)
 useDynLib(iptrie, .registration=TRUE)

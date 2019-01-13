@@ -2,6 +2,7 @@
 #include <Rinternals.h>
 #include <Rdefines.h>
 #include <stdio.h>
+
 #include "iptree.h"
 
 static void trie_finalizer(SEXP ptr) {
@@ -30,22 +31,61 @@ SEXP Rinsert(SEXP trie, SEXP ip, SEXP value) {
   return(R_NilValue);
 }
 
+int find_mask(uint32_t mask) {
+  int i;
+  for (i=0; i<32; i++) {
+    if (mask == masks[i]) break;
+  }
+  return(i);
+}
+
 SEXP Rlookup(SEXP trie, SEXP ip) {
   iptree_node_t *t = (iptree_node_t *)R_ExternalPtrAddr(trie);
   if (t) {
-    char * res = iptree_lookup_best_str(t, CHAR(STRING_ELT(ip, 0)));
+    iptree_node_t *res = iptree_lookup_best_str_2(t, CHAR(STRING_ELT(ip, 0)));
     if (res) {
       SEXP ans;
       PROTECT(ans = allocVector(STRSXP, 1));
-      SET_STRING_ELT(ans, 0, mkChar(res));
+      SET_STRING_ELT(ans, 0, mkChar(res->data));
+      char buffer[17];
+      uint32_t ipl = res->prefix & res->mask;
+      sprintf(buffer, "%d.%d.%d.%d", (ipl>>24)&0xFF, (ipl>>16)&0xFF, (ipl>>8)&0xFF, (ipl)&0xFF);
+      setAttrib(ans, install("ip"), mkString(buffer));
+      setAttrib(ans, install("ipn"), ScalarReal(ipl));
+      setAttrib(ans, install("mask"), ScalarInteger(find_mask(res->mask)));
       UNPROTECT(1);
       return(ans);
-    } else {
-      return(R_NilValue);
     }
-  } else {
-    return(R_NilValue);
   }
+  return(R_NilValue);
+}
+
+//iptree_node_t *iptree_lookup_exact (iptree_node_t *root, uint32_t ip,
+//                                    uint32_t mask);
+
+SEXP Rexact(SEXP trie, SEXP ip) {
+  iptree_node_t *t = (iptree_node_t *)R_ExternalPtrAddr(trie);
+  if (t) {
+    uint32_t ipn, mask;
+    if (iptree_parse_cidr(CHAR(STRING_ELT(ip, 0)), &ipn, &mask)) {
+      iptree_node_t * res = iptree_lookup_exact(t, ipn, mask);
+      if (res) {
+        SEXP ans;
+        PROTECT(ans = allocVector(STRSXP, 1));
+        char buffer[17];
+        uint32_t ipl = res->prefix & res->mask;
+        sprintf(buffer, "%d.%d.%d.%d", (ipl>>24)&0xFF, (ipl>>16)&0xFF, (ipl>>8)&0xFF, (ipl)&0xFF);
+        setAttrib(ans, install("ip"), mkString(buffer));
+        setAttrib(ans, install("ipn"), ScalarReal(ipl));
+        setAttrib(ans, install("mask"), ScalarInteger(find_mask(res->mask)));
+        UNPROTECT(1);
+        return(ans);
+      } else {
+        return(R_NilValue);
+      }
+    }
+  }
+  return(R_NilValue);
 }
 
 SEXP Rremove(SEXP trie, SEXP entry) {

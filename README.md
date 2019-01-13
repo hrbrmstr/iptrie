@@ -40,6 +40,8 @@ The following functions are implemented:
   - `iptrie_destroy`: Destroy an IP trie
   - `iptrie_insert`: Insert a value for an IPv4 Address+CIDR combo into
     an IPv4 Trie
+  - `iptrie_ip_in`: Lookup a value for an IPv4 Address+CIDR combo into
+    an IPv4 Trie or Test for Existence
   - `iptrie_lookup`: Lookup a value for an IPv4 Address+CIDR combo into
     an IPv4 Trie or Test for Existence
   - `iptrie_remove`: Remove a trie entry for an IPv4 Address+CIDR combo
@@ -59,6 +61,7 @@ devtools::install_github("hrbrmstr/iptree")
 
 ``` r
 library(iptrie)
+library(tidyverse)
 
 # current version
 packageVersion("iptree")
@@ -72,24 +75,117 @@ x <- iptrie_create()
 
 iptrie_insert(x, "10.1.10.0/24", "HOME")
 
-iptrie_ip_exists(x,"10.1.10.1/32")
+iptrie_ip_in(x,"10.1.10.1/32")
 ## [1] TRUE
 
-iptrie_ip_exists(x,"10.1.11.1/32")
+iptrie_ip_in(x,"10.1.11.1/32")
 ## [1] FALSE
 
 iptrie_lookup(x, "10.1.10.1/32")
 ## [1] "HOME"
+## attr(,"ip")
+## [1] "10.1.10.0"
+## attr(,"ipn")
+## [1] 167840256
+## attr(,"mask")
+## [1] 24
+
+iptrie_lookup(x, "10.1.10.1/32", "exact")
+## NULL
+```
+
+### Bigger example
+
+``` r
+# Make a trie from autonomous system CIDRs
+xdf <- astools::routeviews_latest()
+
+cat(scales::comma(nrow(xdf)), "\n")
+## 790,647
+
+asntrie <- iptrie_create()
+
+system.time(for (i in 1:nrow(xdf)) {
+  iptrie_insert(asntrie, xdf[["cidr"]][i], xdf[["asn"]][i])
+})
+##    user  system elapsed 
+##   8.835   0.178   9.114
+
+# Get a block list (picked at ransom)
+blklst <- url("https://iplists.firehol.org/files/botscout_1d.ipset")
+y <- readLines(blklst)
+close(blklst)
+
+y <- y[!grepl("^#", y)] # comments at the top
+
+cat(scales::comma(length(y)), "\n")
+## 1,079
+
+system.time(do.call(
+  rbind.data.frame,
+  lapply(y, function(.x) {
+    r <- iptrie_lookup(asntrie, .x, "best")
+    if (is.null(r)) {
+      data.frame(
+        ip = .x, 
+        asn = NA_character_, 
+        cidr = NA_character_,
+        stringsAsFactors = FALSE
+      )
+    } else {
+      data.frame(
+        ip = .x, 
+        asn = r, 
+        cidr = sprintf("%s/%d", attr(r, "ip"), attr(r, "mask")),
+        stringsAsFactors = FALSE
+      )
+    }
+  })
+) -> cdf)
+##    user  system elapsed 
+##   0.303   0.005   0.314
+
+as_tibble(cdf)
+## # A tibble: 1,079 x 3
+##    ip            asn    cidr          
+##    <chr>         <chr>  <chr>         
+##  1 1.10.186.158  23969  1.10.186.0/24 
+##  2 1.20.100.251  23969  1.20.100.0/24 
+##  3 1.20.253.128  23969  1.20.253.0/24 
+##  4 1.179.157.237 131293 1.179.157.0/24
+##  5 1.179.198.37  131293 1.179.198.0/24
+##  6 2.61.150.231  12389  2.61.0.0/16   
+##  7 2.61.173.36   12389  2.61.0.0/16   
+##  8 2.95.6.233    3216   2.95.6.0/24   
+##  9 2.188.164.58  42337  2.188.164.0/22
+## 10 5.8.37.214    50896  5.8.37.0/24   
+## # … with 1,069 more rows
+
+count(cdf, cidr, sort=TRUE)
+## # A tibble: 786 x 2
+##    cidr                 n
+##    <chr>            <int>
+##  1 185.220.101.0/24    19
+##  2 5.188.210.0/24      11
+##  3 51.15.0.0/17        10
+##  4 183.198.0.0/16       8
+##  5 199.249.230.0/24     8
+##  6 172.68.244.0/22      7
+##  7 173.44.224.0/22      7
+##  8 31.184.238.0/24      7
+##  9 192.42.116.0/22      6
+## 10 104.223.0.0/17       5
+## # … with 776 more rows
 ```
 
 ## iptree Metrics
 
-| Lang         | \# Files |  (%) | LoC |  (%) | Blank lines |  (%) | \# Lines |  (%) |
-| :----------- | -------: | ---: | --: | ---: | ----------: | ---: | -------: | ---: |
-| C            |        2 | 0.25 | 271 | 0.80 |          25 | 0.36 |        0 | 0.00 |
-| C/C++ Header |        1 | 0.12 |  29 | 0.09 |           9 | 0.13 |       15 | 0.12 |
-| R            |        4 | 0.50 |  24 | 0.07 |           7 | 0.10 |       61 | 0.48 |
-| Rmd          |        1 | 0.12 |  13 | 0.04 |          29 | 0.41 |       51 | 0.40 |
+| Lang         | \# Files | (%) | LoC |  (%) | Blank lines |  (%) | \# Lines |  (%) |
+| :----------- | -------: | --: | --: | ---: | ----------: | ---: | -------: | ---: |
+| C            |        3 | 0.3 | 334 | 0.74 |          34 | 0.36 |        6 | 0.03 |
+| Rmd          |        1 | 0.1 |  49 | 0.11 |          41 | 0.43 |       57 | 0.32 |
+| R            |        5 | 0.5 |  40 | 0.09 |          11 | 0.12 |      102 | 0.57 |
+| C/C++ Header |        1 | 0.1 |  30 | 0.07 |           9 | 0.09 |       15 | 0.08 |
 
 ## Code of Conduct
 
