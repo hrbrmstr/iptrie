@@ -10,6 +10,11 @@ as_iptrie(x, ...)
 \item{x}{a data frame with at least two columns. Unless you pass
 two string column names via \code{...} the first two columns
 in the data frame will be used.}
+
+\item{...}{either do not specify extra parameter or specify exactly
+two length 1 character vectors (i.e. "strings") with
+the first being the column name to use for the IP/CIDR and
+the second being the column name for the data/value.}
 }
 \description{
 Pass in a data frame with column 1 full of IP addresses or CIDRs and
@@ -19,5 +24,5 @@ names you want (as strings) to select.
 }
 \examples{
 xdf <- data.frame(a = "10.1.10.0/24", b = "HOME", stringsAsFactors = FALSE)
-asip_trie(xdf)
+as_iptrie(xdf)
 }

@@ -40,7 +40,7 @@ is_iptrie <- function(x) {
 #' @keywords internal
 #' @return `trie` (invisibly)
 #' @export
-print.iptrie <- function(x) {
+print.iptrie <- function(x, ...) {
   if (is_null_xptr(x)) {
     cat("<iptree (null/invalid)>\n")
   } else {

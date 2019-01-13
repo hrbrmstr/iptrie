@@ -4,7 +4,7 @@
 \alias{print.iptrie}
 \title{Print for iptrie}
 \usage{
-\method{print}{iptrie}(x)
+\method{print}{iptrie}(x, ...)
 }
 \arguments{
 \item{x}{an iptrie}
