@@ -25,17 +25,15 @@ Functions are based on the 'zmap' 'iptree' 'C' library.
 
 ## NOTE
 
-This is an experiment but will likely turn into a CRAN package or get migrated
+This is an experiment that will not likely turn into a CRAN package or get migrated
 to either the `iptools` or `asntools` package. 
 
 I initially wanted to  feel the pain (again) of using R's own C interface
 (i.e. no `Rcpp` crutch) since it's easy to forget just how handy Rcpp is. 
 (It turns out that my ill memories of playing at the R C level are also unjustified).
 
-Having said that, I also need this functionality and the basic functions here 
-will have more robust conterparts soon.
-
-PRs and issues welcome.
+This is orders of magnitude slower than the method used in `astools::as_asntrie()`
+for an `astools::routeviews_latest()` data set.
 
 ## What's Inside The Tin
 

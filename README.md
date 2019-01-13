@@ -19,18 +19,16 @@ values. Functions are based on the ‘zmap’ ‘iptree’ ‘C’ library.
 
 ## NOTE
 
-This is an experiment but will likely turn into a CRAN package or get
-migrated to either the `iptools` or `asntools` package.
+This is an experiment that will not likely turn into a CRAN package or
+get migrated to either the `iptools` or `asntools` package.
 
 I initially wanted to feel the pain (again) of using R’s own C interface
 (i.e. no `Rcpp` crutch) since it’s easy to forget just how handy Rcpp
 is. (It turns out that my ill memories of playing at the R C level are
 also unjustified).
 
-Having said that, I also need this functionality and the basic functions
-here will have more robust conterparts soon.
-
-PRs and issues welcome.
+This is orders of magnitude slower than the method used in
+`astools::as_asntrie()` for an `astools::routeviews_latest()` data set.
 
 ## What’s Inside The Tin
 
@@ -205,8 +203,8 @@ count(cdf, cidr, sort=TRUE)
 | Lang         | \# Files |  (%) | LoC |  (%) | Blank lines |  (%) | \# Lines |  (%) |
 | :----------- | -------: | ---: | --: | ---: | ----------: | ---: | -------: | ---: |
 | C            |        3 | 0.23 | 346 | 0.65 |          37 | 0.32 |        7 | 0.03 |
-| R            |        8 | 0.62 | 103 | 0.19 |          25 | 0.21 |      161 | 0.65 |
-| Rmd          |        1 | 0.08 |  54 | 0.10 |          46 | 0.39 |       63 | 0.26 |
+| R            |        8 | 0.62 | 103 | 0.19 |          25 | 0.22 |      165 | 0.66 |
+| Rmd          |        1 | 0.08 |  54 | 0.10 |          45 | 0.39 |       62 | 0.25 |
 | C/C++ Header |        1 | 0.08 |  30 | 0.06 |           9 | 0.08 |       15 | 0.06 |
 
 ## Code of Conduct
