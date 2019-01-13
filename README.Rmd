@@ -8,9 +8,9 @@ knitr::opts_chunk$set(collapse=TRUE, fig.retina=2, message=FALSE, warning=FALSE)
 options(width=120)
 ```
 
-[![Travis-CI Build Status](https://travis-ci.org/hrbrmstr/iptree.svg?branch=master)](https://travis-ci.org/hrbrmstr/iptree) 
-[![Coverage Status](https://codecov.io/gh/hrbrmstr/iptree/branch/master/graph/badge.svg)](https://codecov.io/gh/hrbrmstr/iptree)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/iptree)](https://cran.r-project.org/package=iptree)
+[![Travis-CI Build Status](https://travis-ci.org/hrbrmstr/iptrie.svg?branch=master)](https://travis-ci.org/hrbrmstr/iptrie) 
+[![Coverage Status](https://codecov.io/gh/hrbrmstr/iptrie/branch/master/graph/badge.svg)](https://codecov.io/gh/hrbrmstr/iptrie)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/iptrie)](https://cran.r-project.org/package=iptrie)
 
 # iptrie
 
