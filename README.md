@@ -1,7 +1,9 @@
 
-[![Travis-CI Build Status](https://travis-ci.org/hrbrmstr/iptrie.svg?branch=master)](https://travis-ci.org/hrbrmstr/iptrie) 
-[![Coverage Status](https://codecov.io/gh/hrbrmstr/iptrie/branch/master/graph/badge.svg)](https://codecov.io/gh/hrbrmstr/iptrie)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/iptrie)](https://cran.r-project.org/package=iptrie)
+[![Travis-CI Build
+Status](https://travis-ci.org/hrbrmstr/iptrie.svg?branch=master)](https://travis-ci.org/hrbrmstr/iptrie)
+[![Coverage
+Status](https://codecov.io/gh/hrbrmstr/iptrie/branch/master/graph/badge.svg)](https://codecov.io/gh/hrbrmstr/iptrie)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/iptrie)](https://cran.r-project.org/package=iptrie)
 
 # iptrie
 
@@ -34,6 +36,9 @@ PRs and issues welcome.
 
 The following functions are implemented:
 
+  - `as_iptrie`: Convert a data frame to an IP trie
+  - `iptrie`: Efficiently Store and Query ‘IPv4’ Internet Addresses with
+    Associated Data
   - `iptrie_create`: Create a new IPv4 Trie
   - `iptrie_destroy`: Destroy an IP trie
   - `iptrie_insert`: Insert a value for an IPv4 Address+CIDR combo into
@@ -44,8 +49,9 @@ The following functions are implemented:
     an IPv4 Trie or Test for Existence
   - `iptrie_remove`: Remove a trie entry for an IPv4 Address+CIDR combo
     into an IPv4 Trie
+  - `is_iptrie`: Create a new IPv4 Trie \#\# Installation
 
-## Installation
+<!-- end list -->
 
 ``` r
 devtools::install_git("https://sr.ht.com/~hrbrmstr/iptrie.git")
@@ -92,7 +98,25 @@ iptrie_lookup(x, "10.1.10.1/32", "exact")
 ## NULL
 ```
 
-### Bigger example
+### Data frame to iptrie
+
+``` r
+xdf <- data.frame(a = "10.1.10.0/24", b = "HOME", stringsAsFactors = FALSE)
+
+(xt <- as_iptrie(xdf))
+## <iptrie>
+
+is_iptrie(xt)
+## [1] TRUE
+
+(xt <- as_iptrie(xdf, "a", "b"))
+## <iptrie>
+
+iptrie_ip_in(xt, "10.1.10.6")
+## [1] TRUE
+```
+
+### Bigger example (kinda what `as.data.frame.iptrie` does)
 
 ``` r
 # Make a trie from autonomous system CIDRs
@@ -178,12 +202,12 @@ count(cdf, cidr, sort=TRUE)
 
 ## iptree Metrics
 
-| Lang         | \# Files | (%) | LoC |  (%) | Blank lines |  (%) | \# Lines |  (%) |
-| :----------- | -------: | --: | --: | ---: | ----------: | ---: | -------: | ---: |
-| C            |        3 | 0.3 | 334 | 0.74 |          34 | 0.36 |        6 | 0.03 |
-| Rmd          |        1 | 0.1 |  49 | 0.11 |          41 | 0.43 |       57 | 0.32 |
-| R            |        5 | 0.5 |  40 | 0.09 |          11 | 0.12 |      102 | 0.57 |
-| C/C++ Header |        1 | 0.1 |  30 | 0.07 |           9 | 0.09 |       15 | 0.08 |
+| Lang         | \# Files |  (%) | LoC |  (%) | Blank lines |  (%) | \# Lines |  (%) |
+| :----------- | -------: | ---: | --: | ---: | ----------: | ---: | -------: | ---: |
+| C            |        3 | 0.23 | 346 | 0.65 |          37 | 0.32 |        7 | 0.03 |
+| R            |        8 | 0.62 | 103 | 0.19 |          25 | 0.21 |      161 | 0.65 |
+| Rmd          |        1 | 0.08 |  54 | 0.10 |          46 | 0.39 |       63 | 0.26 |
+| C/C++ Header |        1 | 0.08 |  30 | 0.06 |           9 | 0.08 |       15 | 0.06 |
 
 ## Code of Conduct
 

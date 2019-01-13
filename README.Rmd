@@ -41,13 +41,15 @@ PRs and issues welcome.
 
 The following functions are implemented:
 
-- `iptrie_create`:	Create a new IPv4 Trie
-- `iptrie_destroy`:	Destroy an IP trie
-- `iptrie_insert`:	Insert a value for an IPv4 Address+CIDR combo into an IPv4 Trie
-- `iptrie_ip_in`:	Lookup a value for an IPv4 Address+CIDR combo into an IPv4 Trie or Test for Existence
-- `iptrie_lookup`:	Lookup a value for an IPv4 Address+CIDR combo into an IPv4 Trie or Test for Existence
-- `iptrie_remove`:	Remove a trie entry for an IPv4 Address+CIDR combo into an IPv4 Trie
-
+- `as_iptrie`: Convert a data frame to an IP trie
+- `iptrie`:  Efficiently Store and Query 'IPv4' Internet Addresses with Associated Data
+- `iptrie_create`: Create a new IPv4 Trie
+- `iptrie_destroy`:  Destroy an IP trie
+- `iptrie_insert`: Insert a value for an IPv4 Address+CIDR combo into an IPv4 Trie
+- `iptrie_ip_in`:  Lookup a value for an IPv4 Address+CIDR combo into an IPv4 Trie or Test for Existence
+- `iptrie_lookup`: Lookup a value for an IPv4 Address+CIDR combo into an IPv4 Trie or Test for Existence
+- `iptrie_remove`: Remove a trie entry for an IPv4 Address+CIDR combo into an IPv4 Trie
+- `is_iptrie`: Create a new IPv4 Trie
 ## Installation
 
 ```{r install-ex, eval=FALSE}
@@ -85,7 +87,21 @@ iptrie_lookup(x, "10.1.10.1/32")
 iptrie_lookup(x, "10.1.10.1/32", "exact")
 ```
 
-### Bigger example
+### Data frame to iptrie
+
+```{r dftotrie}
+xdf <- data.frame(a = "10.1.10.0/24", b = "HOME", stringsAsFactors = FALSE)
+
+(xt <- as_iptrie(xdf))
+
+is_iptrie(xt)
+
+(xt <- as_iptrie(xdf, "a", "b"))
+
+iptrie_ip_in(xt, "10.1.10.6")
+```
+
+### Bigger example (kinda what `as.data.frame.iptrie` does)
 
 ```{r bigger, cache=TRUE}
 # Make a trie from autonomous system CIDRs

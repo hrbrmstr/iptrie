@@ -14,7 +14,7 @@ iptrie_insert(trie, ip, value)
 \item{value}{character value to store}
 }
 \value{
-\code{NULL} (invisibly)
+\code{trie} (invisibly)
 }
 \description{
 Inserts a value for an IPv4 Address+CIDR combo into an IPv4 Trie

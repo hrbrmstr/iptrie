@@ -5,6 +5,19 @@
 
 #include "iptree.h"
 
+// next 2 ƒ() via <https://github.com/randy3k/xptr/blob/master/src/xptr.c>
+
+void check_is_xptr(SEXP s) {
+  if (TYPEOF(s) != EXTPTRSXP) {
+    error("expected an externalptr");
+  }
+}
+
+SEXP is_null_xptr_(SEXP s) {
+  check_is_xptr(s);
+  return Rf_ScalarLogical(R_ExternalPtrAddr(s) == NULL);
+}
+
 static void trie_finalizer(SEXP ptr) {
   if(!R_ExternalPtrAddr(ptr)) return;
   iptree_destroy((iptree_node_t *)R_ExternalPtrAddr(ptr));
@@ -17,6 +30,7 @@ SEXP Rcreate() {
   if (t) {
     ptr = R_MakeExternalPtr(t, install("IP_trie"), R_NilValue);
     R_RegisterCFinalizerEx(ptr, trie_finalizer, TRUE);
+    setAttrib(ptr, install("class"), mkString("iptrie"));
     return(ptr);
   } else {
     return(R_NilValue);

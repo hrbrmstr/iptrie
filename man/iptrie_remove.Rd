@@ -12,7 +12,7 @@ iptrie_remove(trie, ip)
 \item{ip}{an IPv4 address with mask (will use \code{/32} if not provided)}
 }
 \value{
-\code{NULL} (invisibly)
+\code{trie} (invisibly)
 }
 \description{
 Removes a trie entry for an IPv4 Address+CIDR combo into an IPv4 Trie

@@ -13,6 +13,7 @@ extern SEXP Rdestroy(SEXP);
 extern SEXP Rinsert(SEXP, SEXP, SEXP);
 extern SEXP Rlookup(SEXP, SEXP);
 extern SEXP Rexact(SEXP, SEXP);
+extern SEXP is_null_xptr_(SEXP s);
 
 static const R_CallMethodDef CallEntries[] = {
     {"Rcreate",  (DL_FUNC) &Rcreate,  0},
@@ -20,6 +21,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Rinsert",  (DL_FUNC) &Rinsert,  3},
     {"Rlookup",  (DL_FUNC) &Rlookup,  2},
     {"Rexact",  (DL_FUNC) &Rexact,  2},
+    {"is_null_xptr_",  (DL_FUNC) &is_null_xptr_, 1},
     {NULL, NULL, 0}
 };
 

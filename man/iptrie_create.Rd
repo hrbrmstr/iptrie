@@ -2,12 +2,20 @@
 % Please edit documentation in R/create.R
 \name{iptrie_create}
 \alias{iptrie_create}
+\alias{is_iptrie}
 \title{Create a new IPv4 Trie}
 \usage{
 iptrie_create()
+
+is_iptrie(x)
+}
+\arguments{
+\item{x}{an \code{iptrie}}
 }
 \value{
 an external pointer to an IP trie
+
+an \code{iptrie}
 }
 \description{
 Creates a new IPv4 Trie

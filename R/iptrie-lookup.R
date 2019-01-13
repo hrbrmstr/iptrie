@@ -15,6 +15,7 @@
 #' @return length 1 character vector with attributes `ip`, `ipn`, and `mask`, or `NULL`
 #' @export
 iptrie_lookup <- function(trie, ip, precision = c("best", "exact")) {
+  stopifnot(!is_null_xptr(trie))
   precision <- match.arg(precision[1], c("best", "exact"))
   switch(
     precision,
@@ -33,5 +34,6 @@ iptrie_lookup <- function(trie, ip, precision = c("best", "exact")) {
 #' iptrie_ip_in(x,"10.1.11.1/32")
 #' iptrie_lookup(x, "10.1.10.1/32")
 iptrie_ip_in <- function(trie, ip) {
+  stopifnot(!is_null_xptr(trie))
   !is.null(iptrie_lookup(trie, ip, "best"))
 }
